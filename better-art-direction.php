@@ -2,8 +2,8 @@
 /*
 Plugin Name: Better Art Direction
 Plugin URI: http://github.com/davatron5000/better-art-direction
-Description: A fork of the Art Direction Plugin by Noël Jackson (http://noel.io).
-Author: David Rupert
+Description: A fork of the Art Direction Plugin by Noël Jackson (http://noel.io). Dave Rupert’s changes make it work better in cached environment, Paul Davison’s changes allow it to work on all registered post types.  
+Author: David Rupert with another amendment by Paul Davison
 Version: 1.0
 Author URI: http://daverupert.com
 */
@@ -100,16 +100,28 @@ function art_admin_head() { ?>
 
 <?php
 }
+
+// update to function to allow Art Direction against ALL post types by all users that can edit posts
 function art_add_meta_box() {
-    if( function_exists( 'add_meta_box' ) ) {
-        if( current_user_can('edit_posts') )
-            add_meta_box( 'art-direction-box', __( 'Art Direction', 'art-direction' ),
-                'art_meta_box', 'post', 'normal' );
-        if( current_user_can('edit_pages') )
-            add_meta_box( 'art-direction-box', __( 'Art Direction', 'art-direction' ),
-                'art_meta_box', 'page', 'normal' );
-    }
+	if( function_exists( 'add_meta_box' ) ) {
+        // get an array of all registered post types
+		$types = get_post_types();
+		if( current_user_can('edit_posts') )
+    	add_meta_box( 'art-direction-box', __( 'Art Direction', 'art-direction' ), 'art_meta_box', $types, 'normal' );
+	}
 }
+
+
+// function art_add_meta_box() {
+//     if( function_exists( 'add_meta_box' ) ) {
+//         if( current_user_can('edit_posts') )
+//             add_meta_box( 'art-direction-box', __( 'Art Direction', 'art-direction' ),
+//                 'art_meta_box', 'post', 'normal' );
+//         if( current_user_can('edit_pages') )
+//             add_meta_box( 'art-direction-box', __( 'Art Direction', 'art-direction' ),
+//                 'art_meta_box', 'page', 'normal' );
+//     }
+// }
 
 function art_meta_box() {
     global $post;
